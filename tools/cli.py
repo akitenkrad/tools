@@ -5,7 +5,7 @@ import click
 
 from tools.formatter import Formatter
 from tools.hash import HashType, get_hash
-from tools.utils import check
+from tools.utils import check, describe_cpu, describe_gpu
 
 
 @click.group()
@@ -49,6 +49,12 @@ def sort(input: str, reverse: bool, overwrite: bool):
     if overwrite:
         with open(input, mode='wt', encoding='utf-8') as wf:
             wf.write(linesep.join(text))
+
+
+@cli.command()
+def show_processors():
+    describe_cpu()
+    describe_gpu()
 
 
 if __name__ == '__main__':
