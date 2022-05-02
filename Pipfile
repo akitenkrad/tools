@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+black = "*"
+click = "*"
+flake8 = "*"
+isort = "*"
+mypy = "*"
+numpy = "*"
+pandas = "*"
+PyYAML = "*"
+toml = "*"
+types-toml = "*"
+types-pyyaml = "*"
+py-cpuinfo = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
