@@ -1,7 +1,7 @@
-![Version](https://img.shields.io/badge/tools-v.0.1.0-blue)
-![Size](https://img.shields.io/github/repo-size/akitenkrad/tools)
-![License](https://img.shields.io/github/license/akitenkrad/tools)
-![Last Commit](https://img.shields.io/github/last-commit/akitenkrad/tools)
+![Version](https://img.shields.io/badge/tools-v.0.1.0-blue?style=for-the-badge)
+![Size](https://img.shields.io/github/repo-size/akitenkrad/tools?style=for-the-badge)
+![License](https://img.shields.io/github/license/akitenkrad/tools?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/akitenkrad/tools?style=for-the-badge)
 
 # tools
 tools for AI engineers
