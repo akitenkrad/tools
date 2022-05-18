@@ -1,10 +1,13 @@
+from glob import glob
 from os import PathLike, linesep
 from pathlib import Path
 
 import click
 
-from tools.converter import json2toml, json2yaml, toml2json, toml2yaml, yaml2json, yaml2toml
+from tools.converter import (json2toml, json2yaml, toml2json, toml2yaml,
+                             yaml2json, yaml2toml)
 from tools.formatter import Formatter
+from tools.gdrive import prepare_gdrive, upload_files
 from tools.hash import HashType, get_hash
 from tools.utils import check, describe_cpu, describe_gpu
 
@@ -95,6 +98,16 @@ def to_toml(file):
     else:
         raise RuntimeError(f"Unknown file format: {filepath.suffix}")
     print(res)
+
+
+@cli.command()
+@click.option("--secret", type=click.Path(exists=True), help="client_secret.json for GCP")
+@click.option("--src-dir", type=click.Path(exists=True), help="local source directory")
+@click.option("--dst-dir", type=click.Path(), help="destination directory path for Google Drive")
+def sync_gdrive(secret, src_dir, dst_dir):
+    src_files = [f for f in glob(str(Path(src_dir) / '*'))]
+    service = prepare_gdrive(secret)
+    upload_files(service, src_files, dst_dir)
 
 
 if __name__ == "__main__":
