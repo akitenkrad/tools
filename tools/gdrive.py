@@ -115,9 +115,11 @@ def upload_file(service, src_path: str, dst_path: str):
 
 def upload_files(service, src_files: List[str], dst_dir: str):
     dir_id = create_directory(service, dst_dir)
-    for src_file in tqdm(src_files, desc="Uploading..."):
-        assert Path(src_file).exists()
-        metadata = {"name": Path(src_file).name, "parents": [dir_id]}
-        media = MediaFileUpload(src_file, mimetype=mimetypes.guess_type(src_file)[0], resumable=True)
-        res = service.files().create(body=metadata, media_body=media, fields="id").execute()
-        assert res.get("id") != ""
+    with tqdm(src_files, desc="Uploading...") as it:
+        for src_file in it:
+            it.set_description(f"Uploading {Path(src_file).name}...")
+            assert Path(src_file).exists()
+            metadata = {"name": Path(src_file).name, "parents": [dir_id]}
+            media = MediaFileUpload(src_file, mimetype=mimetypes.guess_type(src_file)[0], resumable=True)
+            res = service.files().create(body=metadata, media_body=media, fields="id").execute()
+            assert res.get("id") != ""

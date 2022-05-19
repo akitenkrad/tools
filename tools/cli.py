@@ -3,6 +3,7 @@ from os import PathLike, linesep
 from pathlib import Path
 
 import click
+from tqdm import tqdm
 
 from tools.converter import json2toml, json2yaml, toml2json, toml2yaml, yaml2json, yaml2toml
 from tools.formatter import Formatter
@@ -104,7 +105,7 @@ def to_toml(file):
 @click.option("--src-dir", type=click.Path(exists=True), help="local source directory")
 @click.option("--dst-dir", type=click.Path(), help="destination directory path for Google Drive")
 def sync_to_gdrive(secret, src_dir, dst_dir):
-    src_files = [f for f in glob(str(Path(src_dir) / "*")) if Path(f).is_file()]
+    src_files = [f for f in tqdm(glob(str(Path(src_dir) / "*")), desc="Counting files...", leave=False) if Path(f).is_file()]
     service = prepare_gdrive(secret)
     upload_files(service, src_files, dst_dir)
 
