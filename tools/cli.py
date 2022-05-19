@@ -4,8 +4,7 @@ from pathlib import Path
 
 import click
 
-from tools.converter import (json2toml, json2yaml, toml2json, toml2yaml,
-                             yaml2json, yaml2toml)
+from tools.converter import json2toml, json2yaml, toml2json, toml2yaml, yaml2json, yaml2toml
 from tools.formatter import Formatter
 from tools.gdrive import prepare_gdrive, upload_files
 from tools.hash import HashType, get_hash
@@ -104,8 +103,8 @@ def to_toml(file):
 @click.option("--secret", type=click.Path(exists=True), help="client_secret.json for GCP")
 @click.option("--src-dir", type=click.Path(exists=True), help="local source directory")
 @click.option("--dst-dir", type=click.Path(), help="destination directory path for Google Drive")
-def sync_gdrive(secret, src_dir, dst_dir):
-    src_files = [f for f in glob(str(Path(src_dir) / '*'))]
+def sync_to_gdrive(secret, src_dir, dst_dir):
+    src_files = [f for f in glob(str(Path(src_dir) / "*")) if Path(f).is_file()]
     service = prepare_gdrive(secret)
     upload_files(service, src_files, dst_dir)
 
