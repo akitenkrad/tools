@@ -113,11 +113,19 @@ def upload_file(service, src_path: str, dst_path: str):
     return file_id
 
 
-def upload_files(service, src_files: List[str], dst_dir: str):
-    dir_id = create_directory(service, dst_dir)
+def upload_files(service, src_files: List[str], src_dir: str, dst_dir: str):
+    dir_map: Dict[str, str] = {}
     with tqdm(src_files, desc="Uploading...") as it:
         for src_file in it:
             it.set_description(f"Uploading {Path(src_file).name}...")
+
+            actual_src_dir = str(Path(src_file).parent).replace(str(Path(src_dir)) + "/", "")
+            actual_dst_dir = str(Path(dst_dir) / actual_src_dir)
+            if actual_dst_dir not in dir_map:
+                dir_id = create_directory(service, actual_dst_dir)
+                dir_map[actual_dst_dir] = dir_id
+            dir_id = dir_map[actual_dst_dir]
+
             assert Path(src_file).exists()
             metadata = {"name": Path(src_file).name, "parents": [dir_id]}
             media = MediaFileUpload(src_file, mimetype=mimetypes.guess_type(src_file)[0], resumable=True)

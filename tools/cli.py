@@ -110,9 +110,9 @@ def sync_to_gdrive(secret, src_dir, dst_dir):
     YOU NEED "client_secret.json" file.
     See https://developers.google.com/drive/api/quickstart/python
     """
-    src_files = [f for f in tqdm(glob(str(Path(src_dir) / "*")), desc="Counting files...", leave=False) if Path(f).is_file()]
+    src_files = [f for f in tqdm(glob(str(Path(src_dir) / "**" / "*"), recursive=True), desc="Counting files...", leave=False) if Path(f).is_file()]
     service = prepare_gdrive(secret)
-    upload_files(service, src_files, dst_dir)
+    upload_files(service, src_files, src_dir, dst_dir)
 
 
 if __name__ == "__main__":
