@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 
 def prepare_gdrive(secret_path: PathLike):
-    token_cache = Path("__cache__/token.json")
+    token_cache = Path("~/__cache__/token.json").expanduser()
     token_cache.parent.mkdir(parents=True, exist_ok=True)
 
     store = oauth_file.Storage(str(token_cache))
