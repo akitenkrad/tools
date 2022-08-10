@@ -5,7 +5,7 @@
     "editor.cursorBlinking": "smooth",
     "editor.cursorSmoothCaretAnimation": true,
     "editor.cursorStyle": "line",
-    "editor.fontFamily": "Utatane, HackGen, Consolas Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "CodeM, Utatane, HackGen, Consolas Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "editor.formatOnSave": true,
     "editor.renderControlCharacters": true,
