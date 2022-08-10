@@ -18,7 +18,9 @@ def cli():
 
 
 @cli.command()
-@click.option("--input-file", type=click.Path(exists=True), default="", help="path to input file [.json]", required=True)
+@click.option(
+    "--input-file", type=click.Path(exists=True), default="", help="path to input file [.json]", required=True
+)
 @click.option("--ensure-ascii", is_flag=True, help="[.json] if True, ensure only ascii characters", required=True)
 @click.option("--indent", type=int, default=2, help="[.json] indent, default=2", required=True)
 def format(input_file: PathLike, ensure_ascii, indent):
@@ -28,9 +30,19 @@ def format(input_file: PathLike, ensure_ascii, indent):
 
 @cli.command()
 @click.option(
-    "--input", type=str, default="Answer to the Ultimate Question of Life, the Universe, and Everything", help="input text or file", required=True
+    "--input",
+    type=str,
+    default="Answer to the Ultimate Question of Life, the Universe, and Everything",
+    help="input text or file",
+    required=True,
 )
-@click.option("--hash-type", type=click.Choice(["md5", "sha1", "sha256", "sha512"]), default="md5", help="hash type", required=True)
+@click.option(
+    "--hash-type",
+    type=click.Choice(["md5", "sha1", "sha256", "sha512"]),
+    default="md5",
+    help="hash type",
+    required=True,
+)
 def hash(input: str, hash_type: str):
     if Path(input).exists():
         text = open(input).read()
@@ -112,7 +124,11 @@ def sync_to_gdrive(secret, src_dir, dst_dir):
     YOU NEED "client_secret.json" file.
     See https://developers.google.com/drive/api/quickstart/python
     """
-    src_files = [f for f in tqdm(glob(str(Path(src_dir) / "**" / "*"), recursive=True), desc="Counting files...", leave=False) if Path(f).is_file()]
+    src_files = [
+        f
+        for f in tqdm(glob(str(Path(src_dir) / "**" / "*"), recursive=True), desc="Counting files...", leave=False)
+        if Path(f).is_file()
+    ]
     service = prepare_gdrive(secret)
     upload_files(service, src_files, src_dir, dst_dir)
 
