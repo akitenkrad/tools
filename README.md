@@ -100,3 +100,37 @@ Options:
   --help       Show this message and exit.
 ```
 </details>
+
+<details>
+<summary>sync-to-gdrive</summary>
+
+```text
+Usage: python -m tools.cli sync-to-gdrive [OPTIONS]
+
+  sync local directory to Google Drive
+
+  YOU NEED "client_secret.json" file. See
+  https://developers.google.com/drive/api/quickstart/python
+
+Options:
+  --secret PATH   client_secret.json for GCP
+  --src-dir PATH  local source directory
+  --dst-dir PATH  destination directory path for Google Drive
+  --help          Show this message and exit.
+```
+</details>
+
+<details>
+<summary>sync-from-gdrive</summary>
+
+```text
+Usage: python -m tools.cli sync-from-gdrive [OPTIONS]
+
+  sync Google Drive to local directory
+
+Options:
+  --id TEXT            google drive object id  [required]
+  --dst-filename PATH  file name to save the object  [required]
+  --help               Show this message and exit.
+```
+</details>

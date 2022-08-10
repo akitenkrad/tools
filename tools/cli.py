@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from tools.converter import json2toml, json2yaml, toml2json, toml2yaml, yaml2json, yaml2toml
 from tools.formatter import Formatter
-from tools.gdrive import prepare_gdrive, upload_files
+from tools.gdrive import download_from_google_drive, prepare_gdrive, upload_files
 from tools.hash import HashType, get_hash
 from tools.utils import check, describe_cpu, describe_gpu
 
@@ -18,17 +18,19 @@ def cli():
 
 
 @cli.command()
-@click.option("--input-file", type=click.Path(exists=True), default="", help="path to input file [.json]")
-@click.option("--ensure-ascii", is_flag=True, help="[.json] if True, ensure only ascii characters")
-@click.option("--indent", type=int, default=2, help="[.json] indent, default=2")
+@click.option("--input-file", type=click.Path(exists=True), default="", help="path to input file [.json]", required=True)
+@click.option("--ensure-ascii", is_flag=True, help="[.json] if True, ensure only ascii characters", required=True)
+@click.option("--indent", type=int, default=2, help="[.json] indent, default=2", required=True)
 def format(input_file: PathLike, ensure_ascii, indent):
     formatted_text = Formatter.format(input_file, ensure_ascii=ensure_ascii, indent=indent)
     print(formatted_text)
 
 
 @cli.command()
-@click.option("--input", type=str, default="Answer to the Ultimate Question of Life, the Universe, and Everything", help="input text or file")
-@click.option("--hash-type", type=click.Choice(["md5", "sha1", "sha256", "sha512"]), default="md5", help="hash type")
+@click.option(
+    "--input", type=str, default="Answer to the Ultimate Question of Life, the Universe, and Everything", help="input text or file", required=True
+)
+@click.option("--hash-type", type=click.Choice(["md5", "sha1", "sha256", "sha512"]), default="md5", help="hash type", required=True)
 def hash(input: str, hash_type: str):
     if Path(input).exists():
         text = open(input).read()
@@ -41,9 +43,9 @@ def hash(input: str, hash_type: str):
 
 
 @cli.command()
-@click.option("--input", type=str, help="input text file")
-@click.option("--reverse", is_flag=True, help="sort in descending order")
-@click.option("--overwrite", is_flag=True, help="overwrite the input file with sorted results")
+@click.option("--input", type=str, help="input text file", required=True)
+@click.option("--reverse", is_flag=True, help="sort in descending order", required=True)
+@click.option("--overwrite", is_flag=True, help="overwrite the input file with sorted results", required=True)
 def sort(input: str, reverse: bool, overwrite: bool):
     text = [line.strip() for line in open(input).read().split(linesep)]
     text = sorted(text, reverse=reverse)
@@ -62,7 +64,7 @@ def show_processors():
 
 
 @cli.command()
-@click.option("--file", type=click.Path(exists=True), help="input file [yaml, toml]")
+@click.option("--file", type=click.Path(exists=True), help="input file [yaml, toml]", required=True)
 def to_json(file):
     filepath = Path(file)
     if filepath.suffix in [".yml", ".yaml"]:
@@ -75,7 +77,7 @@ def to_json(file):
 
 
 @cli.command()
-@click.option("--file", type=click.Path(exists=True), help="input file [yaml, toml]")
+@click.option("--file", type=click.Path(exists=True), help="input file [yaml, toml]", required=True)
 def to_yaml(file):
     filepath = Path(file)
     if filepath.suffix in [".json"]:
@@ -88,7 +90,7 @@ def to_yaml(file):
 
 
 @cli.command()
-@click.option("--file", type=click.Path(exists=True), help="input file [yaml, toml]")
+@click.option("--file", type=click.Path(exists=True), help="input file [yaml, toml]", required=True)
 def to_toml(file):
     filepath = Path(file)
     if filepath.suffix in [".yaml", ".yml"]:
@@ -101,9 +103,9 @@ def to_toml(file):
 
 
 @cli.command()
-@click.option("--secret", type=click.Path(exists=True), help="client_secret.json for GCP")
-@click.option("--src-dir", type=click.Path(exists=True), help="local source directory")
-@click.option("--dst-dir", type=click.Path(), help="destination directory path for Google Drive")
+@click.option("--secret", type=click.Path(exists=True), help="client_secret.json for GCP", required=True)
+@click.option("--src-dir", type=click.Path(exists=True), help="local source directory", required=True)
+@click.option("--dst-dir", type=click.Path(), help="destination directory path for Google Drive", required=True)
 def sync_to_gdrive(secret, src_dir, dst_dir):
     """sync local directory to Google Drive
 
@@ -113,6 +115,14 @@ def sync_to_gdrive(secret, src_dir, dst_dir):
     src_files = [f for f in tqdm(glob(str(Path(src_dir) / "**" / "*"), recursive=True), desc="Counting files...", leave=False) if Path(f).is_file()]
     service = prepare_gdrive(secret)
     upload_files(service, src_files, src_dir, dst_dir)
+
+
+@cli.command()
+@click.option("--id", type=str, help="google drive object id", required=True)
+@click.option("--dst-filename", type=click.Path(), help="file name to save the object", required=True)
+def sync_from_gdrive(id, dst_filename="gdrive_file"):
+    """sync Google Drive to local directory"""
+    download_from_google_drive(id=id, dst_filename=dst_filename)
 
 
 if __name__ == "__main__":
