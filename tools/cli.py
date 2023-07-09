@@ -1,3 +1,4 @@
+import json
 from glob import glob
 from os import PathLike, linesep
 from pathlib import Path
@@ -7,7 +8,6 @@ from tqdm import tqdm
 
 from tools.converter import json2toml, json2yaml, toml2json, toml2yaml, yaml2json, yaml2toml
 from tools.formatter import Formatter
-from tools.gdrive import download_from_google_drive, prepare_gdrive, upload_files
 from tools.hash import HashType, get_hash
 from tools.utils import check, describe_cpu, describe_gpu
 
@@ -115,33 +115,6 @@ def to_toml(file):
     else:
         raise RuntimeError(f"Unknown file format: {filepath.suffix}")
     print(res)
-
-
-@cli.command()
-@click.option("--secret", type=click.Path(exists=True), help="client_secret.json for GCP", required=True)
-@click.option("--src-dir", type=click.Path(exists=True), help="local source directory", required=True)
-@click.option("--dst-dir", type=click.Path(), help="destination directory path for Google Drive", required=True)
-def sync_to_gdrive(secret, src_dir, dst_dir):
-    """sync local directory to Google Drive
-
-    YOU NEED "client_secret.json" file.
-    See https://developers.google.com/drive/api/quickstart/python
-    """
-    src_files = [
-        f
-        for f in tqdm(glob(str(Path(src_dir) / "**" / "*"), recursive=True), desc="Counting files...", leave=False)
-        if Path(f).is_file()
-    ]
-    service = prepare_gdrive(secret)
-    upload_files(service, src_files, src_dir, dst_dir)
-
-
-@cli.command()
-@click.option("--id", type=str, help="google drive object id", required=True)
-@click.option("--dst-filename", type=click.Path(), help="file name to save the object", required=True)
-def sync_from_gdrive(id, dst_filename="gdrive_file"):
-    """sync Google Drive to local directory"""
-    download_from_google_drive(id=id, dst_filename=dst_filename)
 
 
 if __name__ == "__main__":
