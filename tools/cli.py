@@ -62,11 +62,22 @@ def sort(input: str, reverse: bool, overwrite: bool):
     if Path(input).suffix == ".json":
         json_data = json.load(open(input))
         keys = sorted([line.strip() for line in json_data], reverse=reverse)
-        print([json_data[key] for key in keys])
+
+        if isinstance(json_data, dict):
+            print([json_data[key] for key in keys])
+        elif isinstance(json_data, list):
+            print(keys)
+        else:
+            raise RuntimeError(f"Unexpected type: {type(json_data)}")
 
         if overwrite:
             json_data = json.load(open(input))
-            out = [json_data[t] for t in keys]
+            if isinstance(json_data, dict):
+                out = [json_data[t] for t in keys]
+            elif isinstance(json_data, list):
+                out = keys
+            else:
+                raise RuntimeError(f"Unexpected type: {type(json_data)}")
             with open(input, mode="wt", encoding="utf-8") as wf:
                 json.dump(out, wf, ensure_ascii=False, indent=2)
     else:
