@@ -59,7 +59,7 @@ def hash(input: str, hash_type: str):
 @click.option("--reverse", is_flag=True, help="sort in descending order")
 @click.option("--overwrite", is_flag=True, help="overwrite the input file with sorted results")
 def sort(input: str, reverse: bool, overwrite: bool):
-    if Path(input).ext == ".json":
+    if Path(input).suffix == ".json":
         text = [line.strip() for line in json.load(open(input))]
     else:
         text = [line.strip() for line in open(input).read().split(linesep)]
