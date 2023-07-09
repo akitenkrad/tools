@@ -56,8 +56,8 @@ def hash(input: str, hash_type: str):
 
 @cli.command()
 @click.option("--input", type=str, help="input text file", required=True)
-@click.option("--reverse", is_flag=True, help="sort in descending order", required=True)
-@click.option("--overwrite", is_flag=True, help="overwrite the input file with sorted results", required=True)
+@click.option("--reverse", is_flag=True, help="sort in descending order")
+@click.option("--overwrite", is_flag=True, help="overwrite the input file with sorted results")
 def sort(input: str, reverse: bool, overwrite: bool):
     if Path(input).ext == ".json":
         text = [line.strip() for line in json.load(open(input))]
