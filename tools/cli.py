@@ -60,16 +60,22 @@ def hash(input: str, hash_type: str):
 @click.option("--overwrite", is_flag=True, help="overwrite the input file with sorted results")
 def sort(input: str, reverse: bool, overwrite: bool):
     if Path(input).suffix == ".json":
-        text = [line.strip() for line in json.load(open(input))]
+        json_data = json.load(open(input))
+        keys = sorted([line.strip() for line in json_data], reverse=reverse)
+        print([json_data[key] for key in keys])
+
+        if overwrite:
+            json_data = json.load(open(input))
+            out = [json_data[t] for t in keys]
+            with open(input, mode="wt", encoding="utf-8") as wf:
+                json.dump(out, wf, ensure_ascii=False, indent=2)
     else:
-        text = [line.strip() for line in open(input).read().split(linesep)]
-    text = sorted(text, reverse=reverse)
+        text = sorted([line.strip() for line in open(input).read().split(linesep)], reverse=reverse)
+        print(linesep.join(text))
 
-    print(linesep.join(text))
-
-    if overwrite:
-        with open(input, mode="wt", encoding="utf-8") as wf:
-            wf.write(linesep.join(text))
+        if overwrite:
+            with open(input, mode="wt", encoding="utf-8") as wf:
+                wf.write(linesep.join(text))
 
 
 @cli.command()
