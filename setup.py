@@ -32,20 +32,6 @@ setuptools.setup(
         "oauth2client",
         "tqdm",
     ],
-    extras_require={
-        "dev": [
-            "pytest",
-            "black",
-            "mypy",
-            "flake8",
-            "isort",
-            "jupyterlab",
-            "types-python-dateutil",
-            "types-PyYAML",
-            "types-requests",
-            "typing-extensions",
-        ]
-    },
     entry_points={
         "console_scripts": [
             "tools = tools.cli:cli",

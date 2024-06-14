@@ -40,7 +40,7 @@
     "python.formatting.provider": "none",
     "python.formatting.blackPath": "black",
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.organizeImports": "explicit"
     },
     "python.linting.mypyEnabled": true,
     "python.linting.maxNumberOfProblems": 10000,

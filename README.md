@@ -100,3 +100,15 @@ Options:
   --help       Show this message and exit.
 ```
 </details>
+
+<details>
+<summary>to-csv</summary>
+
+```text
+Usage: tools to-csv [OPTIONS]
+
+Options:
+  --file PATH  input file [json]  [required]
+  --help       Show this message and exit.
+```
+</details>

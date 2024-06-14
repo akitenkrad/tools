@@ -4,6 +4,7 @@ from os import PathLike, linesep
 from pathlib import Path
 
 import click
+import pandas as pd
 from tqdm import tqdm
 
 from tools.converter import json2toml, json2yaml, toml2json, toml2yaml, yaml2json, yaml2toml
@@ -132,6 +133,21 @@ def to_toml(file):
     else:
         raise RuntimeError(f"Unknown file format: {filepath.suffix}")
     print(res)
+
+
+@cli.command()
+@click.option("--file", type=click.Path(exists=True), help="input file [json]", required=True)
+def to_csv(file):
+    filepath = Path(file)
+    outfile = filepath.with_suffix(".csv")
+    if filepath.suffix in [".json"]:
+        data = json.load(open(filepath))
+        df = pd.DataFrame(data)
+        df.to_csv(outfile, index=False, header=True)
+        print(f"Converted {filepath.name} -> {outfile.name}")
+
+    else:
+        raise RuntimeError(f"Unknown file format: {filepath.suffix}")
 
 
 if __name__ == "__main__":
